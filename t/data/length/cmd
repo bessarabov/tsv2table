@@ -1,0 +1,1 @@
+cat $DIR/t/data/length/a.tsv | $DIR/tsv2table/tsv2table
