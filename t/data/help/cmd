@@ -1,1 +1,1 @@
-$DIR/tsv2table/tsv2table --help
+$DIR/tsv2table/tsv2table --help 2>&1
