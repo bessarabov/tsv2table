@@ -1,0 +1,12 @@
+FROM perl:5.36.0
+
+RUN cpanm --notest \
+    Path::Tiny \
+    Test::Differences \
+    Test::Whitespaces \
+    ;
+
+COPY t/ /app/t/
+COPY tsv2table/ /app/tsv2table/
+
+WORKDIR /app/

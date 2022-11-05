@@ -1,0 +1,1 @@
+echo -e '1\tone\n2\ttwo\n3\tthree' | $DIR/tsv2table/tsv2table

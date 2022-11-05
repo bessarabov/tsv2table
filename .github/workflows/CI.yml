@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+
+    - name: Docker pull image for code
+      run: docker pull golang:1.19
+
+    - name: Compile code
+      run: docker run --rm --volume `pwd`:/tsv2table/ golang:1.19 sh -c 'cd /tsv2table/tsv2table; go build .'
+
+
+    - name: Docker pull image for tests
+      run: docker pull perl:5.36.0
+
+    - name: Build docker image for tests
+      run: docker build . --file Dockerfile.tsv2table_t --tag tsv2table_t:${{ github.sha }}
+
+    - name: Run test in t/
+      run: docker run --rm tsv2table_t:${{ github.sha }} prove -It/lib/ -vm t/
