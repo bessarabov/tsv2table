@@ -1,0 +1,1 @@
+cat $DIR/t/data/header_off/a.tsv | $DIR/tsv2table/tsv2table --header=off
