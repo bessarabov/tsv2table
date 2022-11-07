@@ -39,16 +39,13 @@ func main() {
 		elements := strings.Split(scanner.Text(), "\t")
 		tableData = append(tableData, elements)
 
-		if len(fieldsLength) == 0 {
-			for _, el := range elements {
-				l := utf8.RuneCountInString(el)
+		for i, el := range elements {
+			l := utf8.RuneCountInString(el)
+			if len(fieldsLength) <= i {
 				fieldsLength = append(fieldsLength, l)
-			}
-		} else {
-			for i, el := range elements {
-				c := utf8.RuneCountInString(el)
-				if c > fieldsLength[i] {
-					fieldsLength[i] = c
+			} else {
+				if l > fieldsLength[i] {
+					fieldsLength[i] = l
 				}
 			}
 		}
