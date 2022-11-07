@@ -1,1 +1,1 @@
-cat $TEST_DIR/a.tsv | $DIR/tsv2table/tsv2table --header=off
+cat $TEST_DIR/a.tsv | $TSV2TABLE --header=off
