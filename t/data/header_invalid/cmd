@@ -1,1 +1,1 @@
-cat $DIR/t/data/header_invalid/a.tsv | $DIR/tsv2table/tsv2table --header=invalid
+cat $TEST_DIR/a.tsv | $DIR/tsv2table/tsv2table --header=invalid

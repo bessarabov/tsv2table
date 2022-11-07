@@ -1,1 +1,1 @@
-cat $DIR/t/data/one_column/a.tsv | $DIR/tsv2table/tsv2table --header=on
+cat $TEST_DIR/a.tsv | $DIR/tsv2table/tsv2table --header=on

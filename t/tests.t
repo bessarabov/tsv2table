@@ -13,15 +13,15 @@ sub main {
     my $cwd = cwd();
 
     foreach my $dir (glob 't/data/*') {
-        my $full_dir = $cwd . '/' . $dir;
+        my $test_dir = $cwd . '/' . $dir;
 
-        my $output = `cd $full_dir; DIR=$cwd sh ./cmd`;
+        my $output = `cd $test_dir; DIR=$cwd TEST_DIR=$test_dir sh ./cmd`;
 
         if ($ENV{FIX}) {
-            path($full_dir . '/expected_output')->spew($output);
+            path($test_dir . '/expected_output')->spew($output);
             fail("Fixing expected_output for $dir");
         } else {
-            my $expected_output = path($full_dir . '/expected_output')->slurp();
+            my $expected_output = path($test_dir . '/expected_output')->slurp();
             eq_or_diff(
                 $output,
                 $expected_output,
