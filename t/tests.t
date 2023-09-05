@@ -27,7 +27,7 @@ sub main {
                     die "Symbol ' can't be used in cmd ($test_dir)";
                 }
 
-                my $full_cmd = "cd $test_dir; DIR=$cwd TEST_DIR=$test_dir TSV2TABLE=$cwd/tsv2table/tsv2table sh -c '$cmd'";
+                my $full_cmd = "cd $test_dir; DIR=$cwd TEST_DIR=$test_dir TSV2TABLE=$cwd/tsv2table sh -c '$cmd'";
                 my $output = `$full_cmd`;
 
                 if ($ENV{FIX}) {

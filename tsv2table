@@ -1,0 +1,85 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings FATAL => 'all';
+use feature qw(say);
+
+use Getopt::Long;
+
+sub parse_options {
+
+    my $header;
+    my $help;
+
+    GetOptions (
+        "header=s" => \$header,
+        "help" => \$help,
+    ) or die("Error in command line arguments\n");
+
+    if ($help) {
+        say 'help';
+        exit 0;
+    }
+
+    if (defined($header)) {
+        my %header2value = (
+            on => 1,
+            off => 0,
+        );
+        if (exists $header2value{$header}) {
+            $header = $header2value{$header};
+        } else {
+            say "Invalid value for --header=$header Valid values are: off (default), on";
+            exit 1;
+        }
+    }
+
+    my $options = {
+        header => $header,
+    };
+
+}
+
+sub main {
+    my $options = parse_options();
+
+    my @max_column_length;
+
+    my @data;
+    while (<>) {
+        chomp;
+        my @row = split "\t", $_;
+
+        for (my $i = 0; $i < scalar @row; $i++) {
+            if (length($row[$i]) > ($max_column_length[$i] // 0)) {
+                $max_column_length[$i] = length($row[$i]);
+            }
+        }
+
+        push @data, \@row;
+    }
+
+    my $header_printed = 0;
+
+    foreach my $row (@data) {
+        my $count = scalar @$row;
+        my $i = 0;
+        foreach my $el (@$row) {
+            printf '%-' . $max_column_length[$i] .'s', $el;
+            if ($count != $i+1) {
+                print " | ";
+            }
+            $i++;
+        }
+        print "\n";
+
+        if ($options->{header} && !$header_printed) {
+            my $full_length = 0;
+            $full_length += $_ foreach @max_column_length;
+            say '-' x ($full_length + 3*(scalar(@max_column_length)-1));
+            $header_printed = 1;
+        }
+    }
+
+}
+main();

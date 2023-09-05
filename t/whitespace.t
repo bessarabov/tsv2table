@@ -7,6 +7,7 @@ use Test::Whitespaces {
 
     files => [
         'README.md',
+        'tsv2table',
     ],
 
     ignore => [

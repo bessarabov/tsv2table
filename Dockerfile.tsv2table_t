@@ -7,6 +7,5 @@ RUN cpanm --notest \
     ;
 
 COPY t/ /app/t/
-COPY tsv2table/ /app/tsv2table/
 
 WORKDIR /app/
