@@ -1,0 +1,6 @@
+$ cat $TEST_DIR/a.tsv | $TSV2TABLE --header=on
+a   
+----
+bbb 
+cccc
+dd  

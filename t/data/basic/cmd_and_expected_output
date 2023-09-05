@@ -1,0 +1,4 @@
+$ echo "1\tone\n2\ttwo\n3\tthree" | $TSV2TABLE
+1 | one  
+2 | two  
+3 | three

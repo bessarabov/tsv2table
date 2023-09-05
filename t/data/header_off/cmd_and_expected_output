@@ -1,5 +1,5 @@
+$ cat $TEST_DIR/a.tsv | $TSV2TABLE --header=off
 one | two     | threee
-----------------------
 a   | aaaaaaa | aa    
 b   | bbbbbb  | bbbb  
 c   | ccccccc | c     
