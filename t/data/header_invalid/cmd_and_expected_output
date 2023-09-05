@@ -1,2 +1,2 @@
-$ cat $TEST_DIR/a.tsv | $TSV2TABLE --header=invalid
-Invalid value for --header=invalid Valid values are: auto (default), on, off
+$ cat $TEST_DIR/a.tsv | $TSV2TABLE --header=asdf
+Invalid value for --header=asdf Valid values are: auto (default), on, off
