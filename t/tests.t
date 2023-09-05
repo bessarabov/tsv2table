@@ -35,8 +35,8 @@ sub main {
                     fail("Fixing cmd_and_expected_output in $dir");
                 } else {
                     eq_or_diff(
-                        $output,
-                        $expected_output,
+                        '$ ' . $cmd . "\n" . $output,
+                        '$ ' . $cmd . "\n" . $expected_output,
                         $dir,
                     );
                 }
