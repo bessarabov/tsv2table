@@ -15,7 +15,7 @@ jobs:
       run: docker pull perl:5.38.0
 
     - name: Build docker image for tests
-      run: docker build . --file Dockerfile.tsv2table_t --tag tsv2table_t:${{ github.sha }}
+      run: docker build . --file t/Dockerfile.tsv2table_t --tag tsv2table_t:${{ github.sha }}
 
     - name: Run test in t/
       run: docker run --rm --volume=`pwd`/tsv2table:/app/tsv2table tsv2table_t:${{ github.sha }} prove -It/lib/ -vm t/
