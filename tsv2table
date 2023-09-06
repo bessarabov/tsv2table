@@ -9,10 +9,12 @@ use Getopt::Long;
 sub parse_options {
 
     my $header;
+    my $separator = "\t";
     my $help;
 
     GetOptions (
         'header=s' => \$header,
+        'separator=s' => \$separator,
         'help' => \$help,
     ) or die("Error in command line arguments\n");
 
@@ -34,13 +36,19 @@ sub parse_options {
         }
     }
 
+    if ($separator eq '\t') {
+        $separator = "\t";
+    }
+
     my $options = {
         header => $header,
+        separator => $separator,
     };
 
 }
 
 sub main {
+
     my $options = parse_options();
 
     my @max_column_length;
@@ -48,7 +56,7 @@ sub main {
     my @data;
     while (<>) {
         chomp;
-        my @row = split "\t", $_;
+        my @row = split $options->{separator}, $_;
 
         for (my $i = 0; $i < scalar @row; $i++) {
             if (length($row[$i]) > ($max_column_length[$i] // 0)) {

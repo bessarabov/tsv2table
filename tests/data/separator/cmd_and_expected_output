@@ -1,0 +1,3 @@
+$ cat $TEST_DIR/separator.tsv | $TSV2TABLE --separator=-
+1 | 2
+a | b | c
