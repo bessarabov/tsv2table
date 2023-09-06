@@ -2,7 +2,7 @@ use Test::Whitespaces {
 
     dirs => [
         '.github/',
-        't/',
+        'tests/',
     ],
 
     files => [
@@ -11,7 +11,7 @@ use Test::Whitespaces {
     ],
 
     ignore => [
-        qr{/t/data/},
+        qr{/tests/data/},
     ],
 
 };

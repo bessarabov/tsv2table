@@ -12,7 +12,7 @@ sub main {
 
     my $cwd = cwd();
 
-    foreach my $dir (glob 't/data/*') {
+    foreach my $dir (glob 'tests/data/*') {
 
         my $test_dir = $cwd . '/' . $dir;
 

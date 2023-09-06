@@ -6,6 +6,6 @@ RUN cpanm --notest \
     Test::Whitespaces \
     ;
 
-COPY t/ /app/t/
+COPY tests/ /app/tests/
 
 WORKDIR /app/
