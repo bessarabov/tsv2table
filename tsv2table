@@ -75,7 +75,7 @@ sub main {
         foreach my $el (@$row) {
             my $align;
 
-            if ($el =~ /^\d+\z/a) {
+            if ($el =~ /^-?\d+\z/a) {
                 # align to the right
                 $align = '';
             } else {
