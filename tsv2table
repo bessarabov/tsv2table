@@ -73,7 +73,17 @@ sub main {
         my $count = scalar @$row;
         my $i = 0;
         foreach my $el (@$row) {
-            printf '%-' . $max_column_length[$i] .'s', $el;
+            my $align;
+
+            if ($el =~ /^\d+\z/a) {
+                # align to the right
+                $align = '';
+            } else {
+                # align to the left
+                $align = '-';
+            }
+
+            printf "%$align" . $max_column_length[$i] .'s', $el;
             if ($count != $i+1) {
                 print ' | ';
             }
