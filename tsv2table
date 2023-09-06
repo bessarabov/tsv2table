@@ -12,8 +12,8 @@ sub parse_options {
     my $help;
 
     GetOptions (
-        "header=s" => \$header,
-        "help" => \$help,
+        'header=s' => \$header,
+        'help' => \$help,
     ) or die("Error in command line arguments\n");
 
     if ($help) {
@@ -67,7 +67,7 @@ sub main {
         foreach my $el (@$row) {
             printf '%-' . $max_column_length[$i] .'s', $el;
             if ($count != $i+1) {
-                print " | ";
+                print ' | ';
             }
             $i++;
         }
