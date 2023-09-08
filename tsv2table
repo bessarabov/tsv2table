@@ -72,6 +72,7 @@ sub main {
     my @data;
     while (<>) {
         chomp;
+        s/\r\z//;
         my @row = split $options->{separator}, $_;
 
         for (my $i = 0; $i < scalar @row; $i++) {
