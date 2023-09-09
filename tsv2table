@@ -3,6 +3,8 @@
 use strict;
 use warnings FATAL => 'all';
 use feature qw(say);
+use utf8;
+use open qw(:std :utf8);
 
 use Getopt::Long;
 
