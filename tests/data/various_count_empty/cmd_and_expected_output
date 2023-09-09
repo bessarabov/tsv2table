@@ -1,0 +1,4 @@
+$ cat $TEST_DIR/a.tsv | $TSV2TABLE
+
+ | 
+ |  | 

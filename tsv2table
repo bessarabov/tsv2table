@@ -78,7 +78,7 @@ sub main {
         my @row = split $options->{separator}, $_, -1;
 
         for (my $i = 0; $i < scalar @row; $i++) {
-            if (length($row[$i]) > ($max_column_length[$i] // 0)) {
+            if (length($row[$i]) >= ($max_column_length[$i] // 0)) {
                 $max_column_length[$i] = length($row[$i]);
             }
         }
