@@ -1,5 +1,6 @@
 $ cat $TEST_DIR/align_int.tsv | $TSV2TABLE
 a     | b    | c  
+------------------
     1 |    2 | 333
    11 |  222 |  33
   111 |   22 |   3

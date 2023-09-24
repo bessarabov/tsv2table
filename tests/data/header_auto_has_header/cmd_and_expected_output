@@ -1,0 +1,6 @@
+$ cat $TEST_DIR/a.tsv | $TSV2TABLE --header=auto
+number | letter
+---------------
+     1 | a     
+     2 | b     
+     3 | c     

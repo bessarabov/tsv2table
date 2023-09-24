@@ -28,12 +28,12 @@ cat file.tsv | tsv2table [options]
 Converts tsv data into a human-readable table.
 
 Options:
-    --header=<on|off>   Specify if there is a header row in the input file.
-                        Optional. Default is \"off\"
-    --separator=<value> Specify the separator character.
-                        Optional. Default is \"\\t\"
+    --header=<auto|on|off>   Specify if there is a header row in the input file.
+                             Optional. Default is \"auto\"
+    --separator=<value>      Specify the separator character.
+                             Optional. Default is \"\\t\"
 
-    --help              Display this help message.
+    --help                   Display this help message.
 
 https://github.com/bessarabov/tsv2table
 ";
@@ -42,16 +42,17 @@ https://github.com/bessarabov/tsv2table
     }
 
     if (defined($header)) {
-        my %header2value = (
+        my %valid_header_values = (
+            auto => 1,
             on => 1,
-            off => 0,
+            off => 1,
         );
-        if (exists $header2value{$header}) {
-            $header = $header2value{$header};
-        } else {
-            say "Invalid value for --header=$header Valid values are: off (default), on";
+        if (!exists $valid_header_values{$header}) {
+            say "Invalid value for --header=$header Valid values are: auto (default), on, off";
             exit 1;
         }
+    } else {
+        $header = 'auto';
     }
 
     if ($separator eq '\t') {
@@ -65,13 +66,28 @@ https://github.com/bessarabov/tsv2table
 
 }
 
+sub get_type {
+    my ($value) = @_;
+
+    if ($value =~ /^-?\d+\z/a) {
+        return 'int';
+    } elsif ($value =~ /^-?\d+\.\d\z/a) {
+        return 'float';
+    } else {
+        return 'string';
+    }
+}
+
 sub main {
 
     my $options = parse_options();
 
-    my @max_column_length;
-
     my @data;
+
+    my @max_column_length;
+    my $row_number = 1;
+    my %row_types;
+
     while (<>) {
         chomp;
         s/\r\z//;
@@ -81,12 +97,26 @@ sub main {
             if (length($row[$i]) >= ($max_column_length[$i] // 0)) {
                 $max_column_length[$i] = length($row[$i]);
             }
+            if ($row_number < 3) {
+                my $type = get_type($row[$i]);
+                $row_types{$row_number}->{$type} = 1;
+            }
         }
 
         push @data, \@row;
+        $row_number++;
     }
 
     my $header_printed = 0;
+    my $data_has_header = 0;
+
+    if (
+        exists($row_types{2})
+        && join('', sort keys %{$row_types{1}}) eq 'string'
+        && join('', sort keys %{$row_types{2}}) ne 'string'
+    ) {
+        $data_has_header = 1
+    }
 
     foreach my $row (@data) {
         my $count = scalar @$row;
@@ -94,7 +124,7 @@ sub main {
         foreach my $el (@$row) {
             my $align;
 
-            if ($el =~ /^-?\d+\z/a) {
+            if (get_type($el) eq 'int') {
                 # align to the right
                 $align = '';
             } else {
@@ -110,7 +140,13 @@ sub main {
         }
         print "\n";
 
-        if ($options->{header} && !$header_printed) {
+        if (
+            !$header_printed
+            && (
+                ($options->{header} eq 'on')
+                || ($options->{header} eq 'auto' && $data_has_header)
+            )
+        ) {
             my $full_length = 0;
             $full_length += $_ foreach @max_column_length;
             say '-' x ($full_length + 3*(scalar(@max_column_length)-1));
@@ -119,4 +155,5 @@ sub main {
     }
 
 }
-main();
+main() if not defined caller;
+1;
