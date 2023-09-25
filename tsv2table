@@ -71,7 +71,7 @@ sub get_type {
 
     if ($value =~ /^-?\d+\z/a) {
         return 'int';
-    } elsif ($value =~ /^-?\d+\.\d\z/a) {
+    } elsif ($value =~ /^-?\d+\.\d+\z/a) {
         return 'float';
     } else {
         return 'string';
