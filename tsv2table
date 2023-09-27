@@ -89,8 +89,7 @@ sub main {
     my %row_types;
 
     while (<>) {
-        chomp;
-        s/\r\z//;
+        s/\r?\n\z//;
         my @row = split $options->{separator}, $_, -1;
 
         for (my $i = 0; $i < scalar @row; $i++) {
