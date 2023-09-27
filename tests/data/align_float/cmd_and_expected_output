@@ -1,0 +1,3 @@
+$ cat $TEST_DIR/align_float.tsv | $TSV2TABLE
+10.0  | 20.0   | 30.0   
+ 1.00 |  2.123 |  3.0005

@@ -67,15 +67,51 @@ https://github.com/bessarabov/tsv2table
 }
 
 sub get_type {
-    my ($value) = @_;
+    my ($value, $return_length) = @_;
 
     if ($value =~ /^-?\d+\z/a) {
-        return 'int';
-    } elsif ($value =~ /^-?\d+\.\d+\z/a) {
-        return 'float';
+        if ($return_length) {
+            return 'int', length($value), 0;
+        } else {
+            return 'int';
+        }
+    } elsif ($value =~ /^(-?\d+)(\.\d+)\z/a) {
+        if ($return_length) {
+            return 'float', length($1), length($2);
+        } else {
+            return 'float';
+        }
     } else {
-        return 'string';
+        if ($return_length) {
+            return 'string', length($value), 0;
+        } else {
+            return 'string';
+        }
     }
+}
+
+sub get_value_with_indentation {
+    my ($value, $column_length, $global_fractional_length) = @_;
+
+    my $align;
+    my $additon_after_value = '';
+
+    my ($type, $non_fractional_length, $fractional_length)  = get_type($value, 1);
+
+    if ($type eq 'int') {
+        # align to the right
+        $align = '';
+        $additon_after_value = ' 'x$global_fractional_length;
+    } elsif ($type eq 'float') {
+        # align to the right
+        $align = '';
+        $additon_after_value = ' 'x($global_fractional_length - $fractional_length);
+    } else {
+        # align to the left
+        $align = '-';
+    }
+
+    return sprintf "%$align" . $column_length .'s', $value . $additon_after_value;
 }
 
 sub main {
@@ -84,7 +120,8 @@ sub main {
 
     my @data;
 
-    my @max_column_length;
+    my @max_non_fractional_length;
+    my @max_fractional_length;
     my $row_number = 1;
     my %row_types;
 
@@ -93,11 +130,17 @@ sub main {
         my @row = split $options->{separator}, $_, -1;
 
         for (my $i = 0; $i < scalar @row; $i++) {
-            if (length($row[$i]) >= ($max_column_length[$i] // 0)) {
-                $max_column_length[$i] = length($row[$i]);
+            my ($type, $non_fractional_length, $fractional_length)  = get_type($row[$i], 1);
+
+            if ($non_fractional_length >= ($max_non_fractional_length[$i] // 0)) {
+                $max_non_fractional_length[$i] = $non_fractional_length;
             }
+
+            if ($fractional_length >= ($max_fractional_length[$i] // 0)) {
+                $max_fractional_length[$i] = $fractional_length;
+            }
+
             if ($row_number < 3) {
-                my $type = get_type($row[$i]);
                 $row_types{$row_number}->{$type} = 1;
             }
         }
@@ -121,17 +164,7 @@ sub main {
         my $count = scalar @$row;
         my $i = 0;
         foreach my $el (@$row) {
-            my $align;
-
-            if (get_type($el) eq 'int') {
-                # align to the right
-                $align = '';
-            } else {
-                # align to the left
-                $align = '-';
-            }
-
-            printf "%$align" . $max_column_length[$i] .'s', $el;
+            print get_value_with_indentation($el, $max_non_fractional_length[$i] + $max_fractional_length[$i], $max_fractional_length[$i]);
             if ($count != $i+1) {
                 print ' | ';
             }
@@ -147,8 +180,11 @@ sub main {
             )
         ) {
             my $full_length = 0;
-            $full_length += $_ foreach @max_column_length;
-            say '-' x ($full_length + 3*(scalar(@max_column_length)-1));
+            for (my $i = 0; $i < @max_non_fractional_length; $i++) {
+                $full_length += $max_non_fractional_length[$i];
+                $full_length += $max_fractional_length[$i];
+            }
+            say '-' x ($full_length + 3*(scalar(@max_non_fractional_length)-1));
             $header_printed = 1;
         }
     }
