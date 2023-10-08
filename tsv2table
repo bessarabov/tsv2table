@@ -170,7 +170,11 @@ sub main {
         my $count = scalar @$row;
         my $i = 0;
         foreach my $el (@$row) {
-            print get_value_with_indentation($el, $max_non_fractional_length[$i] + $max_fractional_length[$i], $max_fractional_length[$i]);
+            print get_value_with_indentation(
+                $el,
+                $max_non_fractional_length[$i] + $max_fractional_length[$i],
+                $max_fractional_length[$i],
+            );
             if ($count != $i+1) {
                 print ' | ';
             }
