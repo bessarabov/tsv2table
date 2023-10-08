@@ -97,10 +97,15 @@ sub get_type {
 }
 
 sub get_value_with_indentation {
-    my ($value, $column_length, $global_fractional_length) = @_;
+    my ($value, $globl_string_length, $global_non_fractional_length, $global_fractional_length) = @_;
 
     my $align;
     my $additon_after_value = '';
+    my $column_length = $global_non_fractional_length + $global_fractional_length;
+
+    if ($globl_string_length > $column_length) {
+        $column_length = $globl_string_length;
+    }
 
     my ($type, $non_fractional_length, $fractional_length)  = get_type($value);
 
@@ -126,24 +131,39 @@ sub main {
 
     my @data;
 
-    my @max_non_fractional_length;
-    my @max_fractional_length;
+    my @max_string_length;
+    my @max_number_non_fractional_length;
+    my @max_number_fractional_length;
+
+    my $column_count = 0;
     my $row_number = 1;
     my %row_types;
 
     while (<>) {
         s/\r?\n\z//;
-        my @row = split(qr(\Q$options->{separator}\E), $_, -1);
+        my @elements = split(qr(\Q$options->{separator}\E), $_, -1);
 
-        for (my $i = 0; $i < scalar(@row); $i++) {
-            my ($type, $non_fractional_length, $fractional_length)  = get_type($row[$i]);
+        if (scalar(@elements) > $column_count) {
+            $column_count = scalar(@elements);
+        }
 
-            if ($non_fractional_length >= ($max_non_fractional_length[$i] // 0)) {
-                $max_non_fractional_length[$i] = $non_fractional_length;
-            }
+        for (my $i = 0; $i < scalar(@elements); $i++) {
+            my ($type, $non_fractional_length, $fractional_length)  = get_type($elements[$i]);
 
-            if ($fractional_length >= ($max_fractional_length[$i] // 0)) {
-                $max_fractional_length[$i] = $fractional_length;
+            if ($type eq 'string') {
+                if ($non_fractional_length >= ($max_string_length[$i] // 0)) {
+                    $max_string_length[$i] = $non_fractional_length;
+                }
+            } elsif ($type eq 'int' || $type eq 'float') {
+                if ($non_fractional_length >= ($max_number_non_fractional_length[$i] // 0)) {
+                    $max_number_non_fractional_length[$i] = $non_fractional_length;
+                }
+
+                if ($fractional_length >= ($max_number_fractional_length[$i] // 0)) {
+                    $max_number_fractional_length[$i] = $fractional_length;
+                }
+            } else {
+                die 'Internal error. This should not happen';
             }
 
             if ($row_number < 3) {
@@ -151,7 +171,7 @@ sub main {
             }
         }
 
-        push @data, \@row;
+        push @data, \@elements;
         $row_number++;
     }
 
@@ -170,11 +190,13 @@ sub main {
         my $count = scalar @$row;
         my $i = 0;
         foreach my $el (@$row) {
-            print get_value_with_indentation(
+            my $value = get_value_with_indentation(
                 $el,
-                $max_non_fractional_length[$i] + $max_fractional_length[$i],
-                $max_fractional_length[$i],
+                $max_string_length[$i] // 0,
+                $max_number_non_fractional_length[$i] // 0,
+                $max_number_fractional_length[$i] // 0,
             );
+            print $value;
             if ($count != $i+1) {
                 print ' | ';
             }
@@ -190,11 +212,18 @@ sub main {
             )
         ) {
             my $full_length = 0;
-            for (my $i = 0; $i < @max_non_fractional_length; $i++) {
-                $full_length += $max_non_fractional_length[$i];
-                $full_length += $max_fractional_length[$i];
+            for (my $i = 0; $i <= $column_count; $i++) {
+                my $column_length =
+                    ($max_number_non_fractional_length[$i] // 0)
+                    + ($max_number_fractional_length[$i] // 0);
+
+                if (($max_string_length[$i] // 0)> $column_length) {
+                    $column_length = $max_string_length[$i];
+                }
+
+                $full_length += $column_length;
             }
-            say '-' x ($full_length + 3*(scalar(@max_non_fractional_length)-1));
+            say '-' x ($full_length + 3*($column_count-1));
             $header_printed = 1;
         }
     }
