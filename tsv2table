@@ -120,9 +120,9 @@ sub main {
 
     while (<>) {
         s/\r?\n\z//;
-        my @row = split $options->{separator}, $_, -1;
+        my @row = split($options->{separator}, $_, -1);
 
-        for (my $i = 0; $i < scalar @row; $i++) {
+        for (my $i = 0; $i < scalar(@row); $i++) {
             my ($type, $non_fractional_length, $fractional_length)  = get_type($row[$i]);
 
             if ($non_fractional_length >= ($max_non_fractional_length[$i] // 0)) {
