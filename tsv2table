@@ -143,14 +143,14 @@ sub main {
     }
 
     my $header_printed = 0;
-    my $data_has_header = 0;
+    my $data_has_header_heuristic = 0;
 
     if (
         exists($row_types{2})
         && join('', sort keys %{$row_types{1}}) eq 'string'
         && join('', sort keys %{$row_types{2}}) ne 'string'
     ) {
-        $data_has_header = 1
+        $data_has_header_heuristic = 1
     }
 
     foreach my $row (@data) {
@@ -169,7 +169,7 @@ sub main {
             !$header_printed
             && (
                 ($options->{header} eq 'on')
-                || ($options->{header} eq 'auto' && $data_has_header)
+                || ($options->{header} eq 'auto' && $data_has_header_heuristic)
             )
         ) {
             my $full_length = 0;
