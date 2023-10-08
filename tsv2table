@@ -11,7 +11,7 @@ use Getopt::Long;
 sub parse_options {
 
     my $header;
-    my $separator = "\t";
+    my $separator;
     my $help;
 
     GetOptions (
@@ -22,30 +22,30 @@ sub parse_options {
 
     if ($help) {
 
-        say "
+        say '
 cat file.tsv | tsv2table [options]
 
 Converts tsv data into a human-readable table.
 
 Options:
     --header=<auto|on|off>   Specify if there is a header row in the input file.
-                             Optional. Default is \"auto\"
+                             Optional. Default is "auto"
     --separator=<value>      Specify the separator character.
-                             Optional. Default is \"\\t\"
+                             Optional. Default is "\t"
 
     --help                   Display this help message.
 
 https://github.com/bessarabov/tsv2table
-";
+';
 
         exit 0;
     }
 
     if (defined($header)) {
-        my %valid_header_values = (
-            auto => 1,
-            on => 1,
-            off => 1,
+        my %valid_header_values = map { $_ => 1 } qw(
+            auto
+            on
+            off
         );
         if (!exists $valid_header_values{$header}) {
             say "Invalid value for --header=$header Valid values are: auto (default), on, off";
@@ -55,7 +55,11 @@ https://github.com/bessarabov/tsv2table
         $header = 'auto';
     }
 
-    if ($separator eq '\t') {
+    if (defined($separator)) {
+        if ($separator eq '\t') {
+            $separator = "\t";
+        }
+    } else {
         $separator = "\t";
     }
 
