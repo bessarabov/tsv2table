@@ -37,4 +37,9 @@ foreach my $expected_type (sort keys %tests) {
     }
 }
 
+is_deeply(
+    [get_type('13.123')],
+    ['float', 2, 4],
+);
+
 done_testing();

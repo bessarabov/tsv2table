@@ -70,7 +70,7 @@ https://github.com/bessarabov/tsv2table
 
 }
 
-# my ($type, $non_fractional_length, $fractional_length)  = get_type('3.123');
+# my ($type, $non_fractional_length, $fractional_length)  = get_type('13.123'); # ('float', 2, 4)
 sub get_type {
     my ($value) = @_;
 
