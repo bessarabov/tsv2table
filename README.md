@@ -21,10 +21,10 @@ Converts tsv data into a human-readable table.
 ## --header=auto
 
 When the `--header=auto` option is specified, a simple heuristic is applied to
-determine the presence of a header. This determination is made by examining the
-first and the seconds rows of data. If the first row exclusively contains
-string values, and the second row contains values that are not strings, it is
-inferred that the data has a header.
+detect the presence of a header. This detection is made by examining the
+first and the second rows of data. If the first row contains only
+string values, and the second row contains non-string values,
+then it is considered that the data has a header.
 
 ## Project Repository
 
