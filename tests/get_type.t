@@ -32,7 +32,7 @@ my %tests = (
 
 foreach my $expected_type (sort keys %tests) {
     foreach my $value (@{$tests{$expected_type}}) {
-        my $type = get_type($value);
+        my ($type) = get_type($value);
         is($type, $expected_type, "'$value' should be $expected_type");
     }
 }

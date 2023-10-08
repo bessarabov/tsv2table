@@ -66,27 +66,16 @@ https://github.com/bessarabov/tsv2table
 
 }
 
+# my ($type, $non_fractional_length, $fractional_length)  = get_type('3.123');
 sub get_type {
-    my ($value, $return_length) = @_;
+    my ($value) = @_;
 
     if ($value =~ /^-?\d+\z/a) {
-        if ($return_length) {
-            return 'int', length($value), 0;
-        } else {
-            return 'int';
-        }
+        return 'int', length($value), 0;
     } elsif ($value =~ /^(-?\d+)(\.\d+)\z/a) {
-        if ($return_length) {
-            return 'float', length($1), length($2);
-        } else {
-            return 'float';
-        }
+        return 'float', length($1), length($2);
     } else {
-        if ($return_length) {
-            return 'string', length($value), 0;
-        } else {
-            return 'string';
-        }
+        return 'string', length($value), 0;
     }
 }
 
@@ -96,7 +85,7 @@ sub get_value_with_indentation {
     my $align;
     my $additon_after_value = '';
 
-    my ($type, $non_fractional_length, $fractional_length)  = get_type($value, 1);
+    my ($type, $non_fractional_length, $fractional_length)  = get_type($value);
 
     if ($type eq 'int') {
         # align to the right
@@ -130,7 +119,7 @@ sub main {
         my @row = split $options->{separator}, $_, -1;
 
         for (my $i = 0; $i < scalar @row; $i++) {
-            my ($type, $non_fractional_length, $fractional_length)  = get_type($row[$i], 1);
+            my ($type, $non_fractional_length, $fractional_length)  = get_type($row[$i]);
 
             if ($non_fractional_length >= ($max_non_fractional_length[$i] // 0)) {
                 $max_non_fractional_length[$i] = $non_fractional_length;
