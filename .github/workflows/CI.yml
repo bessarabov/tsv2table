@@ -21,6 +21,7 @@ jobs:
       run: >
         docker run
         --rm
+        -e LC_ALL=C.UTF-8
         --volume=`pwd`/tsv2table:/app/tsv2table
         --volume=`pwd`/README.md:/app/README.md
         tsv2table_t:${{ github.sha }}
