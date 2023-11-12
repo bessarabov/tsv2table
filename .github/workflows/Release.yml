@@ -14,7 +14,7 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Add version information
-      run: sed -i "s/VERSION = 'dev';/VERSION = '${{ github.ref_name }}'" tsv2table
+      run: sed -i "s/VERSION = 'dev';/VERSION = '${{ github.ref_name }}';/" tsv2table
 
     - name: Create GitHub release
       run: gh release create ${{github.ref_name}} -t "Release ${{github.ref_name}}" tsv2table
