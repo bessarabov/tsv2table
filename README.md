@@ -1,5 +1,17 @@
 # tsv2table
 
+## Installation
+
+ * Download latest `tsv2table` from [Releases](https://github.com/bessarabov/tsv2table/releases)
+ * Make it executable
+
+```
+curl -L https://github.com/bessarabov/tsv2table/releases/latest/download/tsv2table -o tsv2table
+chmod +x tsv2table
+```
+
+## `--help`
+
 ```
 $ tsv2table --help
 
