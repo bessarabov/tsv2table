@@ -7,7 +7,7 @@ $ tsv2table --help
 
     cat file.tsv | tsv2table [options]
 
-Converts tsv data into a human-readable table.
+Converts TSV data into a human-readable table.
 
 ## Options
 
