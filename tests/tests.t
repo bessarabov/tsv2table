@@ -1,6 +1,8 @@
 
 use strict;
 use warnings FATAL => 'all';
+use utf8;
+use open qw(:std :utf8);
 
 use Cwd qw(cwd);
 use Path::Tiny;
@@ -17,7 +19,7 @@ sub main {
         my $test_dir = $cwd . '/' . $dir;
 
         if (-e $test_dir . '/cmd_and_expected_output') {
-            my $cmd_and_expected_output = path($test_dir . '/cmd_and_expected_output')->slurp();
+            my $cmd_and_expected_output = path($test_dir . '/cmd_and_expected_output')->slurp_utf8();
             my ($cmd, $expected_output) = split /\n/, $cmd_and_expected_output, 2;
 
             if ($cmd =~ /\$ (.*)/) {
