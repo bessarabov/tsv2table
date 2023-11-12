@@ -16,6 +16,7 @@ Converts TSV data into a human-readable table.
     --separator=<value>      Specify the separator character (or characters).
                              Optional. Default is "\t"
 
+    --version                Display info about version.
     --help                   Display this help message.
 
 ## --header=auto
@@ -25,6 +26,10 @@ detect the presence of a header. This detection is made by examining the
 first and the second rows of data. If the first row contains only
 string values, and the second row contains non-string values,
 then it is considered that the data has a header.
+
+## Version
+
+dev
 
 ## Project Repository
 

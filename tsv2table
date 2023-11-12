@@ -10,10 +10,13 @@ use Encode qw(decode);
 use Getopt::Long;
 use I18N::Langinfo qw(CODESET langinfo);
 
+our $VERSION = 'dev';
+
 sub parse_options {
 
     my $header;
     my $separator;
+    my $version;
     my $help;
 
     my $codeset = langinfo(CODESET);
@@ -22,8 +25,14 @@ sub parse_options {
     GetOptions (
         'header=s' => \$header,
         'separator=s' => \$separator,
+        'version' => \$version,
         'help' => \$help,
     ) or die("Error in command line arguments\n");
+
+    if ($version) {
+        say $VERSION;
+        exit 0;
+    }
 
     if ($help) {
 
@@ -41,6 +50,7 @@ Converts TSV data into a human-readable table.
     --separator=<value>      Specify the separator character (or characters).
                              Optional. Default is "\t"
 
+    --version                Display info about version.
     --help                   Display this help message.
 
 ## --header=auto
@@ -50,6 +60,10 @@ detect the presence of a header. This detection is made by examining the
 first and the second rows of data. If the first row contains only
 string values, and the second row contains non-string values,
 then it is considered that the data has a header.
+
+## Version
+
+' . $VERSION . '
 
 ## Project Repository
 
