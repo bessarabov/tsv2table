@@ -105,6 +105,10 @@ sub get_type {
 sub get_value_with_indentation {
     my ($value, $globl_string_length, $global_non_fractional_length, $global_fractional_length) = @_;
 
+    $globl_string_length //= 0;
+    $global_non_fractional_length //= 0;
+    $global_fractional_length //= 0;
+
     my $align;
     my $additon_after_value = '';
     my $column_length = $global_non_fractional_length + $global_fractional_length;
@@ -128,7 +132,22 @@ sub get_value_with_indentation {
         $align = '-';
     }
 
-    return sprintf "%$align" . $column_length .'s', $value . $additon_after_value;
+    my $value_with_indentation = sprintf(
+        "%${align}${column_length}s",
+        $value . $additon_after_value,
+    );
+
+    return $value_with_indentation;
+}
+
+sub max {
+    my ($one, $two, $three) = @_;
+    die 'Internal error' if $three;
+
+    $one //= 0;
+    $two //= 0;
+
+    return $one > $two ? $one : $two;
 }
 
 sub main {
@@ -157,17 +176,10 @@ sub main {
             my ($type, $non_fractional_length, $fractional_length)  = get_type($elements[$i]);
 
             if ($type eq 'string') {
-                if ($non_fractional_length >= ($max_string_length[$i] // 0)) {
-                    $max_string_length[$i] = $non_fractional_length;
-                }
+                $max_string_length[$i] = max($non_fractional_length, $max_string_length[$i]);
             } elsif ($type eq 'int' || $type eq 'float') {
-                if ($non_fractional_length >= ($max_number_non_fractional_length[$i] // 0)) {
-                    $max_number_non_fractional_length[$i] = $non_fractional_length;
-                }
-
-                if ($fractional_length >= ($max_number_fractional_length[$i] // 0)) {
-                    $max_number_fractional_length[$i] = $fractional_length;
-                }
+                $max_number_non_fractional_length[$i] = max($non_fractional_length, $max_number_non_fractional_length[$i]);
+                $max_number_fractional_length[$i] = max($fractional_length, $max_number_fractional_length[$i]);
             } else {
                 die 'Internal error. This should not happen';
             }
@@ -198,9 +210,9 @@ sub main {
         foreach my $el (@$row) {
             my $value = get_value_with_indentation(
                 $el,
-                $max_string_length[$i] // 0,
-                $max_number_non_fractional_length[$i] // 0,
-                $max_number_fractional_length[$i] // 0,
+                $max_string_length[$i],
+                $max_number_non_fractional_length[$i],
+                $max_number_fractional_length[$i],
             );
             print $value;
             if ($count != $i+1) {
