@@ -17,7 +17,7 @@ jobs:
       run: sed -i "s/VERSION = 'dev';/VERSION = '${{ github.ref_name }}';/" tsv2table
 
     - name: Prepare release_notes
-      run: cat CHANGELOG.md |grep -E '^${{github.ref_name}}' -A1000|grep -v '```' > release_notes
+      run: echo '```' > release_notes; cat CHANGELOG.md |grep -E '^${{github.ref_name}}' -A1000 >> release_notes
 
     - name: Create GitHub release
       run: gh release create ${{github.ref_name}} -t "Release ${{github.ref_name}}" --notes-file release_notes tsv2table
