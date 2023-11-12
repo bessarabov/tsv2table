@@ -6,13 +6,18 @@ use feature qw(say);
 use utf8;
 use open qw(:std :utf8);
 
+use Encode qw(decode);
 use Getopt::Long;
+use I18N::Langinfo qw(CODESET langinfo);
 
 sub parse_options {
 
     my $header;
     my $separator;
     my $help;
+
+    my $codeset = langinfo(CODESET);
+    @ARGV = map { decode $codeset, $_ } @ARGV;
 
     GetOptions (
         'header=s' => \$header,
@@ -81,6 +86,7 @@ https://github.com/bessarabov/tsv2table
         separator => $separator,
     };
 
+    return $options;
 }
 
 # my ($type, $non_fractional_length, $fractional_length)  = get_type('13.123'); # ('float', 2, 4)
