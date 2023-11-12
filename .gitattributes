@@ -1,5 +1,1 @@
-.gitattributes export-ignore
-.github/ export-ignore
-README.md export-ignore
-tests/ export-ignore
 tsv2table export-ignore
